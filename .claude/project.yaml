@@ -1,0 +1,236 @@
+project:
+  name: agentic-workflow-designer
+  description: |
+    Interactive Claude Code configuration generator that analyzes projects,
+    gathers requirements, and creates optimal multi-agent workflow setups.
+  version: 2.0.0
+  type: workflow-configuration-tool
+
+technology_stack:
+  frontend:
+    - react: 18.x
+    - typescript: 5.x
+    - tailwindcss: 3.x
+    - vite: 5.x
+  backend:
+    - nodejs: 20.x
+    - express: 4.x
+    - prisma: 5.x
+    - typescript: 5.x
+  database:
+    - postgresql: 15.x
+    - redis: 7.x
+  infrastructure:
+    - docker: latest
+    - kubernetes: 1.28
+  testing:
+    - jest: 29.x
+    - playwright: 1.40
+    - vitest: 1.x
+
+agents:
+  primary:
+    - workflow-designer    # Main agent for configuration generation
+    - orchestrator        # For managing the workflow design process
+  
+  required:
+    - workflow-designer   # Analyzes projects and generates configs
+    - requirements-analyst # Helps gather detailed requirements
+  
+  optional:
+    - documentation-writer # For generating setup documentation
+
+workflows:
+  default: workflow-design
+  available:
+    - workflow-design     # Main workflow for configuration generation
+    - quick-setup        # Rapid setup with defaults
+    - enterprise-setup   # Comprehensive setup with all options
+  
+  triggers:
+    auto_detect: true
+    keywords:
+      setup: workflow-design
+      configure: workflow-design
+      init: quick-setup
+      enterprise: enterprise-setup
+
+context_management:
+  strategy: hierarchical
+  persistence:
+    enabled: true
+    location: .claude/context/
+    format: json
+    retention_days: 30
+  
+  compression:
+    enabled: true
+    algorithm: semantic
+    max_context_size: 100000
+    compression_levels:
+      immediate: none
+      recent: light      # Last 5 interactions
+      historical: heavy  # Older than 5 interactions
+  
+  sharing:
+    mechanism: structured_handoff
+    include:
+      - task_requirements
+      - modified_files
+      - key_decisions
+      - open_issues
+    exclude:
+      - verbose_logs
+      - temporary_data
+
+quality_standards:
+  code_coverage:
+    minimum: 80
+    target: 90
+  
+  linting:
+    frontend: eslint
+    backend: eslint
+    enforce: true
+  
+  formatting:
+    prettier: true
+    editorconfig: true
+  
+  security:
+    vulnerability_scanning: true
+    dependency_audit: true
+    secret_scanning: true
+  
+  accessibility:
+    wcag_level: AA
+    testing_required: true
+
+performance_targets:
+  frontend:
+    lighthouse_score: 90
+    bundle_size_kb: 500
+    first_contentful_paint_ms: 1000
+  
+  backend:
+    response_time_p95_ms: 200
+    throughput_rps: 1000
+    error_rate_percent: 0.1
+  
+  database:
+    query_time_p95_ms: 50
+    connection_pool_size: 20
+
+monitoring:
+  metrics:
+    enabled: true
+    location: .claude/metrics/
+    aggregation_interval: daily
+  
+  tracked_metrics:
+    - task_completion_time
+    - token_usage
+    - agent_utilization
+    - error_rate
+    - quality_scores
+    - performance_benchmarks
+  
+  alerting:
+    enabled: true
+    thresholds:
+      error_rate: 5
+      token_usage_per_task: 100000
+      task_duration_minutes: 60
+
+deployment:
+  environments:
+    development:
+      auto_deploy: false
+      validation_required: false
+    
+    staging:
+      auto_deploy: true
+      validation_required: true
+      quality_gates: true
+    
+    production:
+      auto_deploy: false
+      validation_required: true
+      approval_required: true
+      rollback_enabled: true
+
+agent_selection_rules:
+  - rule: complex_frontend
+    condition: "task contains ['React', 'component', 'UI']"
+    agents: [react-specialist, ui-designer]
+  
+  - rule: api_development
+    condition: "task contains ['API', 'endpoint', 'REST']"
+    agents: [api-designer, backend-developer]
+  
+  - rule: database_work
+    condition: "task contains ['database', 'migration', 'query']"
+    agents: [database-administrator, sql-pro]
+  
+  - rule: performance_issues
+    condition: "task contains ['slow', 'optimize', 'performance']"
+    agents: [performance-engineer, debugger]
+  
+  - rule: security_concerns
+    condition: "task contains ['security', 'vulnerability', 'auth']"
+    agents: [security-engineer, penetration-tester]
+
+handoff_templates:
+  standard: |
+    ## Task Handoff
+    **From**: {from_agent}
+    **To**: {to_agent}
+    **Task**: {task_description}
+    
+    ### Context
+    {context}
+    
+    ### Completed Work
+    {completed_items}
+    
+    ### Next Steps
+    {next_steps}
+    
+    ### Files Modified
+    {modified_files}
+  
+  error: |
+    ## Error Handoff
+    **Error Type**: {error_type}
+    **Component**: {component}
+    **Severity**: {severity}
+    
+    ### Error Details
+    {error_details}
+    
+    ### Attempted Solutions
+    {attempted_solutions}
+    
+    ### Recommended Actions
+    {recommendations}
+
+optimization_settings:
+  parallel_execution:
+    enabled: true
+    max_parallel_agents: 5
+    resource_limits:
+      cpu_per_agent: 1
+      memory_per_agent_mb: 512
+  
+  caching:
+    enabled: true
+    strategies:
+      - semantic_similarity
+      - exact_match
+      - partial_match
+    ttl_hours: 24
+  
+  token_optimization:
+    max_tokens_per_agent: 50000
+    compression_threshold: 10000
+    summary_generation: true

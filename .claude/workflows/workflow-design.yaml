@@ -1,0 +1,186 @@
+name: workflow-design
+description: |
+  Interactive workflow for analyzing projects and generating optimal
+  Claude Code multi-agent configurations.
+
+trigger:
+  command: /design-workflow
+  auto_detect: true
+  patterns:
+    - "setup claude code"
+    - "configure agents"
+    - "design workflow"
+
+stages:
+  - name: project_detection
+    agent: workflow-designer
+    tasks:
+      - check_for_existing_code
+      - determine_project_status
+    outputs:
+      - project_status.json
+    branches:
+      - condition: existing_project
+        next: analyze_existing
+      - condition: new_project
+        next: gather_requirements
+
+  - name: analyze_existing
+    agent: workflow-designer
+    optional: true
+    tasks:
+      - scan_codebase
+      - identify_technologies
+      - detect_project_type
+      - analyze_structure
+    outputs:
+      - project_analysis.json
+    success_criteria:
+      - technologies_identified: true
+      - project_type_detected: true
+
+  - name: gather_requirements
+    agent: workflow-designer
+    dependencies: [project_detection]
+    tasks:
+      - ask_project_type
+      - ask_technology_preferences
+      - ask_features_needed
+      - ask_quality_requirements
+      - ask_team_size
+      - confirm_understanding
+    outputs:
+      - requirements.json
+    interactive: true
+    user_input_required: true
+
+  - name: agent_selection
+    agent: workflow-designer
+    dependencies: [gather_requirements]
+    tasks:
+      - analyze_requirements
+      - match_agents_to_needs
+      - select_from_catalog
+      - determine_optional_agents
+    context:
+      catalog: claude-code-agents-catalog.md
+    outputs:
+      - selected_agents.json
+      - agents_rationale.md
+
+  - name: workflow_generation
+    agent: workflow-designer
+    dependencies: [agent_selection]
+    tasks:
+      - design_workflow_patterns
+      - optimize_parallelization
+      - add_quality_gates
+      - configure_error_handling
+    outputs:
+      - .claude-output/workflows/feature-development.yaml
+      - .claude-output/workflows/bug-fix.yaml
+      - .claude-output/workflows/custom-workflows.yaml
+
+  - name: configuration_creation
+    agent: workflow-designer
+    dependencies: [workflow_generation]
+    tasks:
+      - generate_project_yaml
+      - download_agent_configs
+      - create_setup_documentation
+      - validate_configuration
+    outputs:
+      - .claude-output/project.yaml
+      - .claude-output/agents/*.md
+      - .claude-output/SETUP.md
+      - .claude-output/AGENTS_RATIONALE.md
+
+  - name: finalization
+    agent: workflow-designer
+    dependencies: [configuration_creation]
+    tasks:
+      - present_configuration
+      - provide_installation_steps
+      - offer_customization_tips
+      - create_quickstart_guide
+    outputs:
+      - .claude-output/README.md
+      - .claude-output/QUICKSTART.md
+
+interaction_points:
+  requirements_gathering:
+    questions:
+      - "What type of application are you building?"
+      - "What's your primary technology stack?"
+      - "What are your quality requirements?"
+      - "What's your team size?"
+      - "What's your deployment target?"
+      - "Any specific development practices?"
+    
+    options_per_question:
+      application_type:
+        - web_app
+        - api_service
+        - mobile_app
+        - cli_tool
+        - library
+        - microservices
+      
+      quality_requirements:
+        - basic (testing only)
+        - standard (testing + code review)
+        - strict (testing + review + security)
+        - enterprise (full compliance)
+
+output_structure:
+  root: .claude-output
+  directories:
+    - agents
+    - workflows
+    - scripts
+    - templates
+  
+  files:
+    required:
+      - project.yaml
+      - SETUP.md
+      - README.md
+    
+    optional:
+      - AGENTS_RATIONALE.md
+      - CUSTOMIZATION.md
+      - TROUBLESHOOTING.md
+
+agent_selection_rules:
+  - rule: always_include_orchestrator
+    condition: true
+    agents: [orchestrator]
+  
+  - rule: frontend_detected
+    condition: "technologies include ['react', 'vue', 'angular']"
+    agents: [frontend-engineer, frontend-tester]
+  
+  - rule: backend_detected
+    condition: "technologies include ['express', 'django', 'rails']"
+    agents: [backend-engineer, backend-tester]
+  
+  - rule: database_detected
+    condition: "technologies include ['postgres', 'mysql', 'mongodb']"
+    agents: [database-architect]
+  
+  - rule: high_quality_requirements
+    condition: "quality_requirements in ['strict', 'enterprise']"
+    agents: [security-reviewer, documentation-writer, ci-cd-engineer]
+
+success_message: |
+  ✅ Configuration generated successfully!
+  
+  Your custom Claude Code configuration is ready in .claude-output/
+  
+  To use it:
+  1. Review the configuration in .claude-output/
+  2. Copy the contents to your project's .claude/ directory
+  3. Restart Claude Code to load the new configuration
+  4. Start developing with your optimized multi-agent workflow!
+  
+  See .claude-output/SETUP.md for detailed instructions.

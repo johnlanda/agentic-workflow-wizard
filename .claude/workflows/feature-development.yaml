@@ -1,0 +1,219 @@
+name: feature-development
+description: |
+  Complete feature development workflow from requirements to deployment.
+  Coordinates multiple agents for efficient parallel execution.
+
+trigger:
+  command: /develop-feature
+  auto_detect: true
+  patterns:
+    - "implement*"
+    - "build*"
+    - "create*feature"
+
+stages:
+  - name: requirements_analysis
+    agent: orchestrator
+    tasks:
+      - analyze_requirements
+      - identify_components
+      - create_task_breakdown
+    outputs:
+      - requirements.md
+      - task_list.json
+    success_criteria:
+      - clear_requirements: true
+      - tasks_defined: true
+
+  - name: architecture_design
+    agent: orchestrator
+    dependencies: [requirements_analysis]
+    tasks:
+      - design_system_architecture
+      - define_interfaces
+      - plan_data_models
+    outputs:
+      - architecture.md
+      - api_spec.yaml
+      - database_schema.sql
+    validation:
+      required: true
+      validator: code-reviewer
+
+  - name: parallel_implementation
+    parallel: true
+    timeout: 45m
+    components:
+      
+      frontend:
+        agent: frontend-developer
+        context:
+          path: ./frontend
+          requirements: requirements.md
+          api_spec: api_spec.yaml
+        tasks:
+          - setup_project_structure
+          - create_components
+          - implement_state_management
+          - add_routing
+          - style_components
+          - implement_api_integration
+        outputs:
+          - components/*
+          - styles/*
+          - services/*
+        
+      backend:
+        agent: backend-developer
+        context:
+          path: ./backend
+          requirements: requirements.md
+          api_spec: api_spec.yaml
+          database_schema: database_schema.sql
+        tasks:
+          - setup_project_structure
+          - implement_data_models
+          - create_service_layer
+          - build_api_endpoints
+          - add_authentication
+          - implement_business_logic
+        outputs:
+          - controllers/*
+          - services/*
+          - models/*
+          - migrations/*
+      
+      database:
+        agent: database-administrator
+        context:
+          path: ./database
+          schema: database_schema.sql
+        tasks:
+          - create_migrations
+          - setup_indexes
+          - optimize_queries
+          - create_seed_data
+        outputs:
+          - migrations/*
+          - seeds/*
+
+  - name: integration
+    agent: fullstack-developer
+    dependencies: [parallel_implementation]
+    tasks:
+      - connect_frontend_backend
+      - configure_cors
+      - setup_websockets
+      - handle_file_uploads
+      - implement_error_handling
+    validation:
+      integration_tests: true
+      api_contract_tests: true
+
+  - name: testing
+    agent: qa-expert
+    dependencies: [integration]
+    tasks:
+      - create_test_plan
+      - write_unit_tests
+      - implement_integration_tests
+      - setup_e2e_tests
+      - run_test_suites
+      - generate_coverage_report
+    outputs:
+      - test_report.html
+      - coverage_report.html
+    quality_gates:
+      coverage_threshold: 80
+      all_tests_pass: true
+
+  - name: performance_optimization
+    agent: performance-engineer
+    dependencies: [testing]
+    optional: true
+    tasks:
+      - profile_application
+      - identify_bottlenecks
+      - optimize_queries
+      - implement_caching
+      - minimize_bundle_size
+    outputs:
+      - performance_report.md
+      - optimization_recommendations.md
+
+  - name: security_review
+    agent: security-engineer
+    dependencies: [testing]
+    tasks:
+      - security_audit
+      - vulnerability_scan
+      - check_dependencies
+      - review_authentication
+      - validate_authorization
+    outputs:
+      - security_report.md
+    validation:
+      critical_vulnerabilities: 0
+      high_vulnerabilities: 0
+
+  - name: documentation
+    agent: code-reviewer
+    dependencies: [testing]
+    tasks:
+      - generate_api_docs
+      - create_readme
+      - write_component_docs
+      - update_changelog
+    outputs:
+      - README.md
+      - API.md
+      - CHANGELOG.md
+
+  - name: deployment_preparation
+    agent: devops-engineer
+    dependencies: [security_review, documentation]
+    tasks:
+      - create_dockerfile
+      - setup_ci_pipeline
+      - configure_environment
+      - create_deployment_scripts
+    outputs:
+      - Dockerfile
+      - .github/workflows/ci.yml
+      - deploy/*
+
+handoff_protocol:
+  format: structured_json
+  include:
+    - task_status
+    - outputs_generated
+    - issues_found
+    - next_steps
+  
+error_handling:
+  retry_strategy:
+    max_retries: 3
+    backoff: exponential
+  
+  fallback_agents:
+    frontend-developer: fullstack-developer
+    backend-developer: fullstack-developer
+    database-administrator: backend-developer
+  
+  escalation:
+    after_retries: true
+    to: orchestrator
+
+metrics:
+  track:
+    - execution_time
+    - token_usage
+    - parallelization_efficiency
+    - quality_metrics
+  
+  report_to: .claude/metrics/feature-development.json
+
+notifications:
+  on_stage_complete: log
+  on_error: alert
+  on_complete: summary

@@ -1,0 +1,128 @@
+name: bug-fix
+description: |
+  Rapid bug identification and resolution workflow.
+  Focuses on quick diagnosis, fix implementation, and validation.
+
+trigger:
+  command: /fix-bug
+  auto_detect: true
+  patterns:
+    - "fix*"
+    - "debug*"
+    - "resolve*"
+    - "issue*"
+
+stages:
+  - name: bug_analysis
+    agent: debugger
+    priority: high
+    tasks:
+      - reproduce_issue
+      - analyze_error_logs
+      - identify_root_cause
+      - trace_execution_path
+    outputs:
+      - bug_analysis.md
+      - stack_trace.txt
+    timeout: 15m
+
+  - name: impact_assessment
+    agent: code-reviewer
+    dependencies: [bug_analysis]
+    tasks:
+      - identify_affected_components
+      - assess_severity
+      - check_related_code
+      - review_dependencies
+    outputs:
+      - impact_report.md
+      - affected_files.json
+
+  - name: fix_implementation
+    agent: ${specialized_agent}  # Dynamically selected based on component
+    dependencies: [impact_assessment]
+    dynamic_agent_selection:
+      rules:
+        - if: component == "frontend"
+          then: frontend-developer
+        - if: component == "backend"
+          then: backend-developer
+        - if: component == "database"
+          then: database-administrator
+        - default: fullstack-developer
+    tasks:
+      - implement_fix
+      - update_error_handling
+      - add_defensive_checks
+      - refactor_if_needed
+    outputs:
+      - fixed_files/*
+      - fix_summary.md
+
+  - name: test_creation
+    agent: qa-expert
+    dependencies: [fix_implementation]
+    tasks:
+      - write_regression_test
+      - create_edge_case_tests
+      - update_existing_tests
+    outputs:
+      - tests/*
+      - test_plan.md
+
+  - name: validation
+    agent: qa-expert
+    dependencies: [test_creation]
+    tasks:
+      - run_regression_tests
+      - verify_fix
+      - check_side_effects
+      - validate_performance
+    quality_gates:
+      bug_fixed: true
+      no_regressions: true
+      tests_pass: true
+
+  - name: code_review
+    agent: code-reviewer
+    dependencies: [validation]
+    tasks:
+      - review_changes
+      - check_code_quality
+      - verify_standards
+      - suggest_improvements
+    outputs:
+      - review_comments.md
+    approval:
+      required: true
+
+  - name: documentation_update
+    agent: code-reviewer
+    dependencies: [code_review]
+    optional: true
+    tasks:
+      - update_changelog
+      - document_fix
+      - update_known_issues
+    outputs:
+      - CHANGELOG.md
+      - docs/fixes/*
+
+error_handling:
+  immediate_escalation: true
+  preserve_context: true
+  rollback_on_failure: true
+
+metrics:
+  track:
+    - time_to_resolution
+    - fix_complexity
+    - test_coverage_delta
+    - regression_count
+  
+  report_to: .claude/metrics/bug-fixes.json
+
+notifications:
+  on_fix_found: notify
+  on_validation_fail: alert
+  on_complete: detailed_report
