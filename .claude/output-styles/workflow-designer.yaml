@@ -1,0 +1,242 @@
+name: workflow-designer
+description: Interactive workflow design with process narration and visual representation
+version: 1.0.0
+author: Claude Code Workflow Designer
+
+# Output style configuration for workflow design process
+style:
+  # Process phases with descriptive output
+  phases:
+    - name: initialization
+      format: |
+        🎯 **WORKFLOW DESIGN SESSION INITIATED**
+        ───────────────────────────────────────
+        Session ID: {session_id}
+        Timestamp: {timestamp}
+        Mode: {interaction_mode}
+        
+    - name: requirements_gathering
+      format: |
+        📋 **GATHERING REQUIREMENTS**
+        ───────────────────────────────────────
+        ▸ Method: {method}
+        ▸ Status: {status}
+        
+        {questions_or_analysis}
+        
+    - name: analysis
+      format: |
+        🔍 **ANALYZING PROJECT CHARACTERISTICS**
+        ───────────────────────────────────────
+        
+        **Technology Stack Detected:**
+        {technologies}
+        
+        **Project Type:**
+        ▸ {project_type}
+        
+        **Key Requirements:**
+        {requirements_list}
+        
+        **Complexity Assessment:**
+        ▸ Scale: {complexity_scale}
+        ▸ Agent Count Estimate: {agent_count}
+        
+    - name: agent_selection
+      format: |
+        🤖 **SELECTING OPTIMAL AGENTS**
+        ───────────────────────────────────────
+        
+        **Evaluation Criteria:**
+        ✓ Technology compatibility
+        ✓ Task specialization needs
+        ✓ Workflow complexity
+        ✓ Team collaboration patterns
+        
+        **Selected Agents:**
+        {agent_list}
+        
+    - name: workflow_configuration
+      format: |
+        ⚙️ **CONFIGURING WORKFLOW**
+        ───────────────────────────────────────
+        
+        **Workflow Pattern:** {pattern}
+        
+        **Agent Interactions:**
+        {interaction_matrix}
+        
+        **Configuration Files Generated:**
+        {file_list}
+        
+    - name: visualization
+      format: |
+        📊 **WORKFLOW VISUALIZATION**
+        ═══════════════════════════════════════
+        
+        {workflow_diagram}
+        
+        **Legend:**
+        ▸ 🎯 Entry Point
+        ▸ 🔄 Agent Handoff
+        ▸ ⚡ Parallel Execution
+        ▸ 🔀 Decision Point
+        ▸ ✅ Completion
+        
+    - name: summary
+      format: |
+        ✨ **WORKFLOW DESIGN COMPLETE**
+        ═══════════════════════════════════════
+        
+        **Configuration Summary:**
+        ▸ Total Agents: {agent_count}
+        ▸ Workflow Type: {workflow_type}
+        ▸ Estimated Efficiency: {efficiency_score}
+        
+        **Next Steps:**
+        1. Review generated configurations in `.claude-output/`
+        2. Copy configurations to your project's `.claude/` directory
+        3. Test workflow with sample tasks
+        4. Iterate based on performance
+        
+        **Files Created:**
+        {output_files}
+
+# Visual components for workflow representation
+visuals:
+  workflow_diagram:
+    style: ascii_art
+    components:
+      agent_node: |
+        ┌─────────────┐
+        │ {agent_name} │
+        │ {agent_type} │
+        └─────────────┘
+      
+      connection_horizontal: "───→"
+      connection_vertical: "│"
+      connection_parallel: "═══"
+      
+      decision_node: |
+        ◆ {condition}
+      
+      start_node: |
+        ● START
+      
+      end_node: |
+        ● COMPLETE
+
+  # Example workflow layouts
+  patterns:
+    sequential: |
+      ● START
+      │
+      ┌──────────────┐
+      │ Requirements │
+      │   Analyst    │
+      └──────────────┘
+              │
+              ▼
+      ┌──────────────┐
+      │   Frontend   │
+      │   Engineer   │
+      └──────────────┘
+              │
+              ▼
+      ┌──────────────┐
+      │   Backend    │
+      │   Engineer   │
+      └──────────────┘
+              │
+              ▼
+      ┌──────────────┐
+      │  QA Expert   │
+      └──────────────┘
+              │
+              ▼
+          ● COMPLETE
+    
+    parallel: |
+      ● START
+      │
+      ┌──────────────┐
+      │ Orchestrator │
+      └──────────────┘
+              │
+      ╔═══════╬═══════╗
+      ▼       ▼       ▼
+      Frontend Backend Database
+      Engineer Engineer Architect
+      ║       ║       ║
+      ╚═══════╬═══════╝
+              ▼
+      ┌──────────────┐
+      │  QA Expert   │
+      └──────────────┘
+              │
+              ▼
+          ● COMPLETE
+    
+    hybrid: |
+      ● START
+      │
+      ┌──────────────┐
+      │ Requirements │
+      └──────────────┘
+              │
+              ◆ Tech Stack?
+          ╱       ╲
+      React      Full-Stack
+      │              │
+      Frontend   ┌──────────┐
+      Engineer   │Orchestrator│
+      │          └──────────┘
+      │              ║
+      │          ╔═══╬═══╗
+      │          ▼   ▼   ▼
+      │          FE  BE  DB
+      │          ║   ║   ║
+      │          ╚═══╬═══╝
+      │              │
+      └──────────────┘
+              │
+              ▼
+          ● COMPLETE
+
+# Progress indicators
+progress:
+  spinner_frames: ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+  
+  status_icons:
+    pending: "⏳"
+    in_progress: "🔄"
+    completed: "✅"
+    error: "❌"
+    warning: "⚠️"
+
+# Color scheme (for terminal that supports colors)
+colors:
+  primary: cyan
+  secondary: blue
+  success: green
+  warning: yellow
+  error: red
+  info: magenta
+  
+# Formatting rules
+formatting:
+  headers:
+    level1: "**{text}**"
+    level2: "__{text}__"
+    level3: "{text}"
+  
+  lists:
+    bullet: "▸"
+    numbered: "{number}."
+    checkbox_empty: "☐"
+    checkbox_filled: "☑"
+  
+  dividers:
+    thin: "───────────────────────────────────────"
+    thick: "═══════════════════════════════════════"
+    dotted: "···········································"

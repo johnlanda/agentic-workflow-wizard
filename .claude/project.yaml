@@ -5,6 +5,7 @@ project:
     gathers requirements, and creates optimal multi-agent workflow setups.
   version: 2.0.0
   type: workflow-configuration-tool
+  output_style: workflow-designer
 
 technology_stack:
   frontend:

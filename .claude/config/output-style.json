@@ -1,0 +1,24 @@
+{
+  "outputStyle": {
+    "enabled": true,
+    "style": "workflow-designer",
+    "path": "../output-styles/workflow-designer.yaml",
+    "settings": {
+      "useColors": true,
+      "showProgressIndicators": true,
+      "visualizationMode": "ascii",
+      "verbosityLevel": "detailed"
+    },
+    "phaseTransitions": {
+      "automatic": true,
+      "showTimestamps": true,
+      "clearBetweenPhases": false
+    },
+    "workflowVisualization": {
+      "enabled": true,
+      "defaultPattern": "auto-detect",
+      "showLegend": true,
+      "maxWidth": 80
+    }
+  }
+}

@@ -4,6 +4,13 @@
 
 This repository contains an **interactive workflow designer** that helps developers automatically configure optimal multi-agent setups for their Claude Code projects. Instead of manually selecting agents and writing workflows, simply describe your project and let Claude Code design the perfect configuration for you.
 
+### ✨ Now with Custom Output Style!
+The workflow designer features a sophisticated output style that provides:
+- **Process narration** as requirements are gathered and evaluated
+- **Visual workflow diagrams** in ASCII art format
+- **Progress tracking** with clear phase indicators
+- **Interactive feedback** throughout the design process
+
 ## 🚀 How It Works
 
 1. **Clone this repository** - It contains the workflow designer agent
@@ -24,7 +31,7 @@ git clone [this-repo]
 cd agentic-coding
 
 # 2. Open in Claude Code
-claude-code .
+claude .
 
 # 3. Start the design process
 "Help me set up Claude Code agents for my project"
@@ -47,7 +54,7 @@ cp PROJECT_REQUIREMENTS_TEMPLATE.md my-requirements.md
 # Edit my-requirements.md with your project details
 
 # 2. Open in Claude Code
-claude-code .
+claude .
 
 # 3. Share your requirements
 "Here's my project requirements: [paste template contents]"
@@ -61,7 +68,7 @@ ls .claude-output/
 
 ## 🤖 What Gets Generated
 
-The workflow designer creates a complete Claude Code configuration:
+The workflow designer creates a complete Claude Code configuration with rich visual output:
 
 ```
 .claude-output/
@@ -78,6 +85,47 @@ The workflow designer creates a complete Claude Code configuration:
 └── README.md            # Project-specific guide
 ```
 
+### 📊 Visual Workflow Output Example
+
+During the design process, you'll see rich visual representations like:
+
+```
+📊 WORKFLOW VISUALIZATION
+═══════════════════════════════════════
+
+● START
+│
+┌──────────────┐
+│ Requirements │
+│   Analyst    │
+└──────────────┘
+        │
+        ◆ Project Type?
+    ╱       ╲
+Frontend   Full-Stack
+    │          │
+┌──────┐  ┌──────────┐
+│  FE   │  │Orchestrator│
+│Engine │  └──────────┘
+└──────┘        ║
+    │      ╔═══╬═══╗
+    │      ▼   ▼   ▼
+    │      FE  BE  DB
+    │      ║   ║   ║
+    │      ╚═══╬═══╝
+    └──────────┘
+        │
+        ▼
+    ● COMPLETE
+
+Legend:
+▸ 🎯 Entry Point
+▸ 🔄 Agent Handoff
+▸ ⚡ Parallel Execution
+▸ 🔀 Decision Point
+▸ ✅ Completion
+```
+
 ## 💡 Example Interactions
 
 ### Using the Requirements Template (Recommended)
@@ -85,7 +133,21 @@ The workflow designer creates a complete Claude Code configuration:
 You: "I've filled out the requirements template for my SaaS project: 
 [pastes filled template with React, Node.js, PostgreSQL, Auth, Payments, etc.]"
 
-Designer: "Perfect! I've parsed your requirements template. Based on your specifications:
+Designer: 
+🎯 WORKFLOW DESIGN SESSION INITIATED
+───────────────────────────────────────
+Session ID: WD-2024-001
+Timestamp: 2024-01-15 10:30 AM
+Mode: Template Parsing
+
+📋 GATHERING REQUIREMENTS
+───────────────────────────────────────
+▸ Method: Template Analysis
+▸ Status: Complete
+
+🔍 ANALYZING PROJECT CHARACTERISTICS
+───────────────────────────────────────
+Perfect! I've parsed your requirements template. Based on your specifications:
 - Full-stack web application
 - React/Redux frontend with TailwindCSS
 - Node.js/Express backend with REST API
@@ -222,6 +284,31 @@ Creates optimized workflows that:
 
 ## 🔧 Customizing the Designer
 
+### Custom Output Style
+
+The workflow designer uses a sophisticated custom output style that provides:
+
+#### Configuration Location
+- **Style Definition**: `.claude/output-styles/workflow-designer.yaml`
+- **Configuration**: `.claude/config/output-style.json`
+- **Documentation**: `.claude/CLAUDE.md`
+
+#### Output Phases
+The designer progresses through these visual phases:
+1. 🎯 **Initialization** - Session startup
+2. 📋 **Requirements Gathering** - Interactive or template-based
+3. 🔍 **Analysis** - Technology and complexity assessment
+4. 🤖 **Agent Selection** - Optimal agent matching
+5. ⚙️ **Configuration** - Workflow generation
+6. 📊 **Visualization** - ASCII workflow diagram
+7. ✨ **Summary** - Complete configuration overview
+
+#### Workflow Visualization Patterns
+Three automatic patterns based on complexity:
+- **Sequential**: Linear handoffs for simple projects
+- **Parallel**: Concurrent execution with orchestrator
+- **Hybrid**: Mixed patterns with conditional branching
+
 ### Adding New Agent Sources
 
 Edit `.claude/agents/workflow-designer.md` to include new agent repositories or custom agents.
@@ -233,6 +320,14 @@ Update the agent selection matrix in the workflow designer to match your organiz
 ### Creating Templates
 
 Add workflow templates in `.claude/workflows/` for common project types in your organization.
+
+### Customizing the Output Style
+
+Modify `.claude/output-styles/workflow-designer.yaml` to:
+- Change visual representations
+- Add new workflow patterns
+- Customize progress indicators
+- Adjust formatting and colors
 
 ## 📊 Supported Project Types
 
