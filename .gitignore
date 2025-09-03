@@ -1,0 +1,19 @@
+# Generated output directory
+.claude-output/
+
+# macOS
+.DS_Store
+*.swp
+*.swo
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+tmp/
+temp/
